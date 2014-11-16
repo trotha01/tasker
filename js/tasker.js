@@ -23,6 +23,11 @@ function swapStartPause(task) {
     }
 }
 
+// Graph starts out hidden
+function displayGraph() {
+    document.getElementById('donut').removeAttribute('hidden');
+}
+
 // Adds a new task if enter is pressed
 function newTask(e) {
     if (!e) { var e = window.event; }
@@ -31,6 +36,7 @@ function newTask(e) {
     if (e.keyCode == 13) {
         e.preventDefault();
         task = document.getElementById('newtaskinput').value;
+        document.getElementById('newtaskinput').value = "";
         addTask(task);
     }
 }
@@ -41,7 +47,7 @@ function addTask(task) {
 
     // Create dom element for task
     var newTaskDiv = document.createElement('div');
-    newTaskDiv.setAttribute('class','task button');
+    newTaskDiv.setAttribute('class','task button list-item flat');
     newTaskDiv.setAttribute('role','start');
     newTaskDiv.setAttribute('id',task);
     newTaskDiv.onclick=function() {startTimer(task) };
@@ -60,6 +66,7 @@ function addTask(task) {
 }
 
 function startTimer(task) {
+    displayGraph();
     swapStartPause(task);
     if(!aggTime[task]) {
         aggTime[task] = 0;
@@ -100,7 +107,7 @@ function arrayFromSet(set) {
 }
 
 var chart = c3.generate({
-    bindto: '#c3sample',
+    bindto: '#donut',
     data: {
         columns: [],
         type : 'donut',

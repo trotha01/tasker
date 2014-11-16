@@ -1,12 +1,12 @@
 {
   "manifest_version": 2,
 
-  "name": "Task Stats",
-  "description": "This extension will track your tasks.",
+  "name": "Tasker",
+  "description": "This extension will track stats for your tasks.",
   "version": "1.0",
 
   "browser_action": {
-    "default_icon": "icon.png",
+    "default_icon": "stats_icon.png",
     "default_popup": "popup.html"
   },
   "permissions": [
