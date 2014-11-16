@@ -14,12 +14,15 @@
     h3 {
         margin:0px;
     }
+    header {
+        width:500px;
+    }
     .task {
         font-size:100%;
         line-height:100%;
     }
-    #taskheader {
-        width:400px;
+    .inline {
+        /*display:inline;*/
     }
     #newtaskinput {
         font-size:1.5em;
@@ -32,8 +35,12 @@
 
   <body>
     <div id="display">
-        <h3 id="taskheader">Tasks</h3>
+        <div class="header"></div>
+            <h3 id="taskheader" class="pull-left inline">Tasks</h3>
+            <span id="clear" role="button" class="pull-right button">Clear</span>
+        <div class="header"></div>
         <input id="newtaskinput" type="text" name="newtask"></input>
+        <div id="error" class="error-message text-red"></div>
         <div id="tasks"></div>
 
         <div id="donut" hidden></div>

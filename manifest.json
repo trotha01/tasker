@@ -1,15 +1,19 @@
 {
-  "manifest_version": 2,
-
-  "name": "Tasker",
-  "description": "This extension will track stats for your tasks.",
-  "version": "1.0",
-
-  "browser_action": {
-    "default_icon": "stats_icon.png",
-    "default_popup": "popup.html"
-  },
-  "permissions": [
-    "https://secure.flickr.com/"
-  ]
+	"name": "Tasker",
+	"version": "1.3.0",
+	"manifest_version": 2,
+        "description": "Tasker will track stats for your tasks.",
+	"browser_action": {
+                "default_title": "Tasker",
+                "default_icon": "stats_icon.png"
+	},
+        "background": {
+                "scripts": ["js/background.js"]
+        }
 }
+
+
+
+
+
+
