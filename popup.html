@@ -23,115 +23,12 @@
       -
       - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
      -->
-    <!-- Load c3.css -->
   <link href="c3.min.css" rel="stylesheet" type="text/css">
 
-    <!-- Load d3.js and c3.js -->
   <script src="c3.min.js"></script>
   <script src="d3.min.js" charset="utf-8"></script>
-
-  <script>
-    stats = {};
-    timer = null;
-
-    function swapStartPause(task) {
-        // startpauseButton = document.getElementById("startpause");
-        startpauseButton = document.getElementById(task);
-        currentRole = startpauseButton.getAttribute('role');
-        switch (currentRole) {
-            case "start":
-                startpauseButton.setAttribute('role','pause');
-                startpauseButton.onclick = function() {stopTimer(task) };
-                break;
-            case "pause":
-                startpauseButton.setAttribute('role','start');
-                startpauseButton.onclick = function() {startTimer(task) };
-                break;
-        }
-    }
-
-    function newTask(e) {
-        if (!e) { var e = window.event; }
-
-        // Enter is pressed
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            task = document.getElementById('newtaskinput').value;
-            addTask(task);
-        }
-    }
-
-    function addTask(task) {
-        if (task == "") { return; }
-
-        // Create dom element for it
-        var newTaskDiv = document.createElement('div');
-        newTaskDiv.setAttribute('class','task');
-        newTaskDiv.setAttribute('role','start');
-        newTaskDiv.setAttribute('id',task);
-        newTaskDiv.onclick=function() {startTimer(task) };
-
-        var newTaskSpan = document.createElement('div');
-        newTaskSpan.innerHTML = task;
-        var newTaskTimeSpan = document.createElement('div');
-        newTaskTimeSpan.setAttribute('class','tasktime');
-
-        newTaskDiv.appendChild(newTaskSpan);
-        newTaskDiv.appendChild(newTaskTimeSpan);
-
-        // Append to tasks container
-        finishedTasks = document.getElementById("tasks");
-        finishedTasks.appendChild(newTaskDiv);
-    }
-   
-    function startTimer(task) {
-        console.log(task);
-        swapStartPause(task);
-        if (!timer) {
-            start = Date.now();
-            timer = setInterval(function() {update(task)}, 100);
-        } else {
-            timer = setInterval(function() {update(task)}, 100);
-        }
-    }
-
-    function stopTimer(task) {
-        swapStartPause(task);
-        if (timer) {
-            clearInterval(timer);
-            // timer = null;
-        }
-    }
-
-    function taskDone() {
-        start = 0;
-        timer = null;
-        render();
-    }
-
-    function update(task) {
-        now = Date.now();
-        runningTime = (now - start)/1000
-        render(task);
-    }
-
-    function render(task) {
-        tasktime = document.getElementById(task).getElementsByClassName('tasktime')[0];
-        tasktime.innerHTML = runningTime + " seconds";
-        stats[task] = runningTime;
-        statsArray = arrayFromSet(stats);
-        updatec3(statsArray);
-    }
-    function arrayFromSet(set) {
-        var a = new Array();
-        for (var key in set) {
-            a.push([key, set[key]]);
-        }
-        return a;
-    }
-  </script>
-
   </head>
+
   <body>
     <div id="display">
         <h3>Tasks</h3>
@@ -141,24 +38,6 @@
         <div id="c3sample"></div>
     </div>
 
-    <script>
-    var chart = c3.generate({
-        bindto: '#c3sample',
-        data: {
-            columns: [],
-            type : 'donut',
-        },
-        donut: {
-            title: "Task Stats"
-        }
-    });
-
-    function updatec3(data) {
-        chart.load({
-            columns: data
-        });
-    }
-
-    </script>
+    <script src="tasker.js" charset="utf-8"></script>
   </body>
 </html>
