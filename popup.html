@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Getting Started Extension's Popup</title>
+    <title>Task Stats</title>
     <style>
       body {
         min-width: 357px;
@@ -28,57 +28,103 @@
 
     <!-- Load d3.js and c3.js -->
   <script src="c3.min.js"></script>
-
   <script src="d3.min.js" charset="utf-8"></script>
-  <script src="nv.d3.min.js" charset="utf-8"></script>
-  <link rel="stylesheet" type="text/css" href="nv.d3.min.css">
+
   <script>
-    // TODO: dynamically change start/pause
     stats = {};
     timer = null;
 
-    function startTimer() {
-        if (!timer) {
-            start = Date.now();
-            timer = setInterval(update, 100);
-        } else {
-            timer = setInterval(update, 100);
+    function swapStartPause(task) {
+        // startpauseButton = document.getElementById("startpause");
+        startpauseButton = document.getElementById(task);
+        currentRole = startpauseButton.getAttribute('role');
+        switch (currentRole) {
+            case "start":
+                startpauseButton.setAttribute('role','pause');
+                startpauseButton.onclick = function() {stopTimer(task) };
+                break;
+            case "pause":
+                startpauseButton.setAttribute('role','start');
+                startpauseButton.onclick = function() {startTimer(task) };
+                break;
         }
     }
 
-    function stopTimer() {
+    function newTask(e) {
+        if (!e) { var e = window.event; }
+
+        // Enter is pressed
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            task = document.getElementById('newtaskinput').value;
+            addTask(task);
+        }
+    }
+
+    function addTask(task) {
+        if (task == "") { return; }
+
+        // Create dom element for it
+        var newTaskDiv = document.createElement('div');
+        newTaskDiv.setAttribute('class','task');
+        newTaskDiv.setAttribute('role','start');
+        newTaskDiv.setAttribute('id',task);
+        newTaskDiv.onclick=function() {startTimer(task) };
+
+        var newTaskSpan = document.createElement('div');
+        newTaskSpan.innerHTML = task;
+        var newTaskTimeSpan = document.createElement('div');
+        newTaskTimeSpan.setAttribute('class','tasktime');
+
+        newTaskDiv.appendChild(newTaskSpan);
+        newTaskDiv.appendChild(newTaskTimeSpan);
+
+        // Append to tasks container
+        finishedTasks = document.getElementById("tasks");
+        finishedTasks.appendChild(newTaskDiv);
+    }
+   
+    function startTimer(task) {
+        console.log(task);
+        swapStartPause(task);
+        if (!timer) {
+            start = Date.now();
+            timer = setInterval(function() {update(task)}, 100);
+        } else {
+            timer = setInterval(function() {update(task)}, 100);
+        }
+    }
+
+    function stopTimer(task) {
+        swapStartPause(task);
         if (timer) {
             clearInterval(timer);
             // timer = null;
         }
     }
 
-    function resetTimer() {
+    function taskDone() {
         start = 0;
         timer = null;
         render();
     }
 
-    function update() {
+    function update(task) {
         now = Date.now();
         runningTime = (now - start)/1000
-        render();
+        render(task);
     }
-    function render() {
-        task = document.getElementById("task").value;
-        runningTaskDisplay = document.getElementById("runningTask");
-        runningTaskDisplay.innerHTML = task + " " + runningTime + " seconds";
+
+    function render(task) {
+        tasktime = document.getElementById(task).getElementsByClassName('tasktime')[0];
+        tasktime.innerHTML = runningTime + " seconds";
         stats[task] = runningTime;
         statsArray = arrayFromSet(stats);
-        // change(statsArray);
         updatec3(statsArray);
     }
     function arrayFromSet(set) {
         var a = new Array();
-        console.log("set to convert: ", set);
         for (var key in set) {
-            console.log("Add key: ", key);
-            // a.push({"key":key, "value":set[key]});
             a.push([key, set[key]]);
         }
         return a;
@@ -87,190 +133,32 @@
 
   </head>
   <body>
-    Hello World!
-    <div id=".stopwatch">
-        <input id='task' type="text" name="task"></input>
-        <button type="button" onclick="startTimer()">Start</button>
-        <button type="button" onclick="stopTimer()">Pause</button>
-        <button type="button" onclick="resetTimer()">Reset</button>
-    </div>
     <div id="display">
-        <div id="runningTask"></div>
-        <div id="finishedTasks"></div>
+        <h3>Tasks</h3>
+        <input id='newtaskinput' type="text" name="newtask" onkeydown="newTask()"></input>
+        <div id="tasks"></div>
+
         <div id="c3sample"></div>
-        <div id="tasksChart"></div>
     </div>
-
-
-
-
 
     <script>
+    var chart = c3.generate({
+        bindto: '#c3sample',
+        data: {
+            columns: [],
+            type : 'donut',
+        },
+        donut: {
+            title: "Task Stats"
+        }
+    });
 
-var data1 = [{
-    "key": "mip",
-    "value": 24
-}, {
-    "key": "theft",
-    "value": 558
-}, {
-    "key": "drugs",
-    "value": 81
-}, {
-    "key": "arson",
-    "value": 3
-}, {
-    "key": "assault",
-    "value": 80
-}, {
-    "key": "burglary",
-    "value": 49
-}, {
-    "key": "disorderlyConduct",
-    "value": 63
-}, {
-    "key": "mischief",
-    "value": 189
-}, {
-    "key": "dui",
-    "value": 107
-}, {
-    "key": "resistingArrest",
-    "value": 11
-}, {
-    "key": "sexCrimes",
-    "value": 24
-}, {
-    "key": "other",
-    "value": 58
-}];
-
-var chart = c3.generate({
-    bindto: '#c3sample',
-    data: {
-        columns: [],
-        type : 'donut',
-        onclick: function (d, i) { console.log("onclick", d, i); },
-        onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-        onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-    },
-    donut: {
-        title: "Task Stats"
+    function updatec3(data) {
+        chart.load({
+            columns: data
+        });
     }
-});
 
-function updatec3(data) {
-    console.log("Update c3", data);
-    chart.load({
-        columns: data
-    });
-}
-
-var data2 = [{
-    "key": "mip",
-    "value": 10
-}, {
-    "key": "theft",
-    "value": 30
-}, {
-    "key": "drugs",
-    "value": 10
-}, {
-    "key": "arson",
-    "value": 3
-}, {
-    "key": "assault",
-    "value": 80
-}, {
-    "key": "burglary",
-    "value": 49
-}, {
-    "key": "disorderlyConduct",
-    "value": 10
-}, {
-    "key": "mischief",
-    "value": 389
-}, {
-    "key": "dui",
-    "value": 507
-}, {
-    "key": "resistingArrest",
-    "value": 11
-}, {
-    "key": "sexCrimes",
-    "value": 24
-}, {
-    "key": "other",
-    "value": 258
-}];
-
-var width = 800,
-    height = 250,
-    radius = Math.min(width, height) / 2;
-
-var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-
-var arc = d3.svg.arc()
-    .outerRadius(radius - 10)
-    .innerRadius(radius - 70);
-
-var pie = d3.layout.pie()
-    .sort(null)
-    .value(function(d) {
-        // return d.totalCrimes;
-        return d.value;
-    });
-
-
-var svg = d3.select("#tasksChart").append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .append("g")
-    .attr("id", "pieChart")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-var path = svg.selectAll("path")
-    .data(pie(data1))
-    .enter()
-    .append("path");
-
-path.transition()
-    .duration(500)
-    .attr("fill", function(d, i) {
-        return color(d.data.key);
-    })
-    .attr("d", arc)
-    .each(function(d) {
-        this._current = d;
-    }); // store the initial angles
-
-change(data1);
-
-function change(data) {
-    console.log("change", data)
-    path.data(pie(data));
-    // redraw the arcs
-    // path.transition().duration(750).attrTween("d", arcTween) 
-    path.transition().attrTween("d", arcTween) 
-    .attr("fill", function(d, i) {
-        return color(d.data.key);
-    });
-
-}
-
-// Store the displayed angles in _current.
-// Then, interpolate from _current to the new angles.
-// During the transition, _current is updated in-place by d3.interpolate.
-
-function arcTween(a) {
-    var i = d3.interpolate(this._current, a);
-    this._current = i(0);
-    return function(t) {
-        return arc(i(t));
-    };
-}
     </script>
   </body>
 </html>
-
