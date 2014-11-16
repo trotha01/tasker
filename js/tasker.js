@@ -1,5 +1,11 @@
-stats = {};
-timer = null;
+stats = {}; // Holds current stats for tasks
+timers = {}; // Holds running timers for tasks
+aggTime = {}; // Holds aggregated time for tasks (Not up-to-date)
+starts = {}; // Holds most recent start time for tasks
+
+
+// document.getElementById('newtaskinput').onclick = newTask;
+document.getElementById('newtaskinput').addEventListener('keydown', newTask);
 
 function swapStartPause(task) {
     // startpauseButton = document.getElementById("startpause");
@@ -17,6 +23,7 @@ function swapStartPause(task) {
     }
 }
 
+// Adds a new task if enter is pressed
 function newTask(e) {
     if (!e) { var e = window.event; }
 
@@ -28,12 +35,13 @@ function newTask(e) {
     }
 }
 
+// Adds task to DOM
 function addTask(task) {
     if (task == "") { return; }
 
-    // Create dom element for it
+    // Create dom element for task
     var newTaskDiv = document.createElement('div');
-    newTaskDiv.setAttribute('class','task');
+    newTaskDiv.setAttribute('class','task button');
     newTaskDiv.setAttribute('role','start');
     newTaskDiv.setAttribute('id',task);
     newTaskDiv.onclick=function() {startTimer(task) };
@@ -52,38 +60,33 @@ function addTask(task) {
 }
 
 function startTimer(task) {
-    console.log(task);
     swapStartPause(task);
-    if (!timer) {
-        start = Date.now();
-        timer = setInterval(function() {update(task)}, 100);
-    } else {
-        timer = setInterval(function() {update(task)}, 100);
+    if(!aggTime[task]) {
+        aggTime[task] = 0;
     }
+    starts[task] = Date.now();
+    timers[task] = setInterval(function() {update(task)}, 100);
 }
 
 function stopTimer(task) {
+    now = Date.now();
     swapStartPause(task);
-    if (timer) {
-        clearInterval(timer);
+    if (timers[task]) {
+        aggTime[task] = (now - starts[task])/1000
+        clearInterval(timers[task]);
     }
-}
-
-function taskDone() {
-    start = 0;
-    timer = null;
-    render();
 }
 
 function update(task) {
     now = Date.now();
-    runningTime = (now - start)/1000
+    // runningTime = (now - starts[task])/1000
+    runningTime = aggTime[task] + (now - starts[task])/1000
     render(task);
 }
 
 function render(task) {
     tasktime = document.getElementById(task).getElementsByClassName('tasktime')[0];
-    tasktime.innerHTML = runningTime + " seconds";
+    tasktime.innerHTML = runningTime.toFixed(3) + " seconds";
     stats[task] = runningTime;
     statsArray = arrayFromSet(stats);
     updatec3(statsArray);

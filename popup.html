@@ -3,6 +3,8 @@
   <head>
     <title>Task Stats</title>
     <style>
+
+/*
       body {
         min-width: 357px;
         overflow-x: hidden;
@@ -15,6 +17,147 @@
         width: 75px;
         height: 75px;
       }
+
+body {
+  font-family: 'Roboto', arial;
+  font-size: 140rem;
+  font-size: 14px;
+  line-height: 140rem;
+  line-height: 14px;
+  line-height: 220rem;
+  line-height: 22px;
+  color: #424242;
+  background-color: #fafafa;
+  -webkit-font-smoothing: antialiased;
+}
+
+body:before {
+  position: fixed;
+  visibility: hidden;
+  *display: none;
+}
+
+    input[type=text] {
+      width: 100%;
+      background: none;
+      border: 0;
+      border-bottom: 1px solid #cfd8dc;
+      padding: 5px 0 9px 0;
+      -webkit-border-radius: 0;
+      -moz-border-radius: 0;
+      border-radius: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    input[type=text]:focus {
+      outline: 0;
+      border-width: 2px;
+      padding-bottom: 8px;
+      border-color: #00bcd4;
+    }
+    input[type=text]:disabled {
+      border-style: dotted;
+    }
+    input[type=text]:disabled:hover {
+      cursor: not-allowed;
+    }
+    input[type=text]:disabled::-webkit-input-placeholder {
+      opacity: 0.5;
+    }
+    input[type=text]:disabled:-moz-placeholder {
+      opacity: 0.5;
+    }
+    input[type=text]:disabled::-moz-placeholder {
+      opacity: 0.5;
+    }
+    input[type=text]:disabled:-ms-input-placeholder {
+      opacity: 0.5;
+    }
+
+.button {
+  padding: 10px 20px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  font-size: 90%;
+  line-height: 90%;
+  width: auto !important;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0,0,0,0.12);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0,0,0,0.12);
+  box-shadow: 0px 1px 2px 1px rgba(0,0,0,0.12);
+}
+.button:not(.waves-effect):hover {
+  background-color: #0097a7;
+  -webkit-box-shadow: 0px 1px 2px 1px rgba(0,0,0,0.12);
+  -moz-box-shadow: 0px 1px 2px 1px rgba(0,0,0,0.12);
+  box-shadow: 0px 1px 2px 1px rgba(0,0,0,0.12);
+}
+.button:not(.waves-effect):active {
+  -webkit-box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.16);
+  -moz-box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.16);
+  box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.16);
+}
+.button:not(.waves-effect).disabled {
+  background-color: #eee;
+  color: #bdbdbd;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.button:not(.waves-effect).disabled:hover {
+  color: #bdbdbd;
+}
+.button:not(.waves-effect).disabled:hover {
+  background-color: none;
+  color: #bdbdbd;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.button:not(.waves-effect).disabled:hover:hover {
+  color: #bdbdbd;
+}
+.button:not(.waves-effect).disabled:active {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.button.text {
+  background: none;
+  padding: 0 20px 0 0;
+  font-weight: bold;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.button.text:hover {
+  background: none;
+  color: #4dd0e1;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.button.text:active {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.button.text.disabled {
+  background: none;
+}
+.button.text.disabled:hover {
+  color: #bdbdbd;
+}
+.button.text.disabled:hover:hover {
+  color: #bdbdbd;
+}
+
+*/
     </style>
 
     <!--
@@ -23,21 +166,22 @@
       -
       - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
      -->
-  <link href="c3.min.css" rel="stylesheet" type="text/css">
+  <link href="css/base.css" rel="stylesheet" type="text/css">
+  <link href="css/c3.min.css" rel="stylesheet" type="text/css">
 
-  <script src="c3.min.js"></script>
-  <script src="d3.min.js" charset="utf-8"></script>
+  <script src="js/c3.min.js"></script>
+  <script src="js/d3.min.js" charset="utf-8"></script>
   </head>
 
   <body>
     <div id="display">
         <h3>Tasks</h3>
-        <input id='newtaskinput' type="text" name="newtask" onkeydown="newTask()"></input>
+        <input id='newtaskinput' type="text" name="newtask"></input>
         <div id="tasks"></div>
 
         <div id="c3sample"></div>
     </div>
 
-    <script src="tasker.js" charset="utf-8"></script>
+    <script src="js/tasker.js" charset="utf-8"></script>
   </body>
 </html>
