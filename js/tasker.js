@@ -3,6 +3,7 @@ stats = {}; // Holds current stats for tasks
 timers = {}; // Holds running timers for tasks
 aggTime = {}; // Holds aggregated time for tasks (Not up-to-date)
 starts = {}; // Holds most recent start time for tasks
+running = {}; // Holds which tasks are currently running
 
 localstorage = window.localStorage;
 
@@ -44,8 +45,6 @@ function saveInStorage(object, item) {
 }
 
 // ACTION - load from storage, reload, add listeners //
-aggTime = loadFromStorage(aggTime, 'aggTime');
-starts = loadFromStorage(starts, 'starts');
 reloadTasks();
 
 document.getElementById('newtaskinput').addEventListener('keyup', validateInput);
@@ -53,14 +52,23 @@ document.getElementById('newtaskinput').addEventListener('keydown', newTask);
 document.getElementById('clear').addEventListener('click', clear);
 
 function reloadTasks() {
+    starts = loadFromStorage(starts, 'starts');
     stats = loadFromStorage(stats, 'stats');
+    running = loadFromStorage(running, 'running');
+
     for(var key in stats) {
         if(stats.hasOwnProperty(key)) {
+            aggTime[key] = stats[key];
             addTask(key);
             if(stats[key] != 0) {
                 displayGraph();
             }
             render(key);
+        }
+    }
+    for(var key in running) {
+        if(running.hasOwnProperty(key)) {
+            startTimer(key);
         }
     }
 }
@@ -221,18 +229,22 @@ function addTask(task) {
 }
 
 function startTimer(task) {
+    starts[task] = Date.now();
+    running[task] = true;
+    saveInStorage(running, 'running');
     displayGraph();
     swapStartPause(task);
     if(!aggTime[task]) {
         aggTime[task] = 0;
     }
-    starts[task] = Date.now();
     timers[task] = setInterval(function() {update(task)}, 100);
     saveInStorage(starts,'starts');
 }
 
 function stopTimer(task) {
     now = Date.now();
+    delete running[task];
+    saveInStorage(running, 'running');
     swapStartPause(task);
     if (timers[task]) {
         aggTime[task] += (now - starts[task])/1000
