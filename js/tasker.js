@@ -185,6 +185,7 @@ function addNewTask(task) {
     saveInStorage(stats,'stats');
 
     addTask(task);
+    updateGraphFromStats(stats);
 }
 
 function deleteTask(task) {
@@ -199,7 +200,8 @@ function deleteTask(task) {
     saveInStorage(stats, 'stats');
     saveInStorage(starts, 'starts');
     saveInStorage(aggTime, 'aggTime');
-    updateGraphFromStats(stats);
+
+    chart.unload(task);
 }
 
 // Adds task to DOM
