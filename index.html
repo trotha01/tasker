@@ -21,8 +21,9 @@
         font-size:100%;
         line-height:100%;
     }
-    .inline {
-        /*display:inline;*/
+    .active {
+        /*color:#80deea !important;*/
+        /*color:#26C6DA !important;*/
     }
     #newtaskinput {
         font-size:1.5em;
@@ -35,11 +36,9 @@
 
   <body>
     <div id="display">
-        <div class="header"></div>
             <h3 id="taskheader" class="pull-left inline">Tasks</h3>
             <span id="clear" role="button" class="pull-right button">Clear</span>
-        <div class="header"></div>
-        <input id="newtaskinput" type="text" name="newtask"></input>
+        <input id="newtaskinput" type="text" name="newtask">
         <div id="error" class="error-message text-red"></div>
         <div id="tasks"></div>
 

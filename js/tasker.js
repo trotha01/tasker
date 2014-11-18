@@ -51,6 +51,10 @@ document.getElementById('newtaskinput').addEventListener('keyup', validateInput)
 document.getElementById('newtaskinput').addEventListener('keydown', newTask);
 document.getElementById('clear').addEventListener('click', clear);
 
+window.onload = function() {
+    document.getElementById('newtaskinput').focus();
+}
+
 function reloadTasks() {
     starts = loadFromStorage(starts, 'starts');
     stats = loadFromStorage(stats, 'stats');
@@ -228,12 +232,24 @@ function addTask(task) {
     finishedTasks.appendChild(newTaskDiv);
 }
 
+function activateTask(task) {
+    t = document.getElementById(task);
+    t.className = t.className + " active"
+}
+
+function deactivateTask(task) {
+    t = document.getElementById(task);
+    t.className = t.className.replace(/\bactive\b/,'');
+}
+
 function startTimer(task) {
     starts[task] = Date.now();
     running[task] = true;
     saveInStorage(running, 'running');
+    activateTask(task);
     displayGraph();
     swapStartPause(task);
+
     if(!aggTime[task]) {
         aggTime[task] = 0;
     }
@@ -244,6 +260,7 @@ function startTimer(task) {
 function stopTimer(task) {
     now = Date.now();
     delete running[task];
+    deactivateTask(task);
     saveInStorage(running, 'running');
     swapStartPause(task);
     if (timers[task]) {
