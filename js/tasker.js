@@ -185,7 +185,6 @@ function addNewTask(task) {
     saveInStorage(stats,'stats');
 
     addTask(task);
-    updateGraphFromStats(stats);
 }
 
 function deleteTask(task) {
